@@ -53,13 +53,8 @@
   <h1>Futurestruct Internship Application</h1>
   <form action="/submit_application" method="post" id="internshipForm">
     <label for="name">Full Name *</label>
+    <label for="name">Full Name *</label>
     <input type="text" id="name" name="name" required>
-
-    <label for="name">Email *</label>
-    <input type="text" id="email" name="email" required>
-
-    <label for="name">Phone number *</label>
-    <input type="tel" id="phone" name="phone" required>
 
     <label for="gender">Gender *</label>
     <select id="gender" name="gender" required>
@@ -68,6 +63,12 @@
       <option value="Female">Female</option>
       <option value="Other">Other</option>
     </select>
+    <label for="emai">Email *</label>
+    <input type="text" id="email" name="email" required>
+
+    <label for="Phone">Phone Number *</label>
+    <input type="tel" id="phone" name="phone" pattern="[0-9]{10,15}" inputmode="numeric" required placeholder="e.g. 08012345678">
+
 
     <label for="school">School *</label>
     <input type="text" id="school" name="school" required>
