@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Futurestruct Internship Application</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #eef2f5;
+      padding: 20px;
+    }
+    .form-container {
+      max-width: 600px;
+      margin: auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #003366;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      margin-top: 20px;
+      padding: 12px 20px;
+      background-color: #003366;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #00509e;
+    }
+  </style>
+</head>
+<body>
+
+<div class="form-container">
+  <h1>Futurestruct Internship Application</h1>
+  <form action="/submit_application" method="post" id="internshipForm">
+    <label for="name">Full Name *</label>
+    <input type="text" id="name" name="name" required>
+
+    <label for="gender">Gender *</label>
+    <select id="gender" name="gender" required>
+      <option value="">--Select--</option>
+      <option value="Male">Male</option>
+      <option value="Female">Female</option>
+      <option value="Other">Other</option>
+    </select>
+
+    <label for="school">School *</label>
+    <input type="text" id="school" name="school" required>
+
+    <label for="program">Program *</label>
+    <input type="text" id="program" name="program" required>
+
+    <label for="level">Level *</label>
+    <input type="text" id="level" name="level" required>
+
+    <label for="role">Role You're Interested In *</label>
+    <select id="role" name="role" required>
+      <option value="">--Select--</option>
+      <option value="Project Manager">Project Manager</option>
+      <option value="IoT Specialist/Engineer">IoT Specialist/Engineer</option>
+      <option value="3D Designer/Visualization Expert">3D Designer/Visualization Expert</option>
+      <option value="Architect">Architect</option>
+      <option value="IT Technician">IT Technician</option>
+      <option value="Software Developer">Software Developer</option>
+      <option value="Blockchain Technologist">Blockchain Technologist</option>
+    </select>
+
+    <label for="why">Why should we pick you? *</label>
+    <textarea id="why" name="why" rows="4" required></textarea>
+
+    <label for="skills">Other skills you can contribute *</label>
+    <textarea id="skills" name="skills" rows="4" required></textarea>
+
+    <button type="submit">Submit Application</button>
+  </form>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('internshipForm');
+    // The URL for your Flask backend. Make sure this matches where your backend is running.
+    // If your backend is on a different server or port, update this URL.
+    const backendUrl = '/submit_application';
+
+    form.addEventListener('submit', function (event) {
+      event.preventDefault(); // Prevent the default form submission (page reload)
+
+      const formData = new FormData(form);
+      const submitButton = form.querySelector('button[type="submit"]');
+      const originalButtonText = submitButton.textContent;
+      submitButton.textContent = 'Submitting...';
+      submitButton.disabled = true;
+
+      fetch(backendUrl, {
+        method: 'POST',
+        body: formData // FormData will be sent as 'multipart/form-data' or 'application/x-www-form-urlencoded'
+      })
+      .then(response => {
+        // Check if the response is OK (status in the range 200-299)
+        if (!response.ok) {
+          // If not OK, try to parse the error message from the backend if it's JSON
+          return response.json().then(errData => {
+            throw new Error(errData.message || `Server error: ${response.status}`);
+          }).catch(() => {
+            // If parsing JSON fails or no JSON body, throw a generic error
+            throw new Error(`Server error: ${response.status}`);
+          });
+        }
+        return response.json(); // Parse the JSON response from the backend
+      })
+      .then(data => {
+        if (data.status === 'success') {
+          alert('Application submitted successfully!');
+          form.reset(); // Optionally reset the form fields after successful submission
+        } else {
+          // Handle errors reported by the backend in its JSON response
+          alert('Submission failed: ' + (data.message || 'Unknown error from server.'));
+        }
+      })
+
+      .finally(() => {
+        submitButton.textContent = originalButtonText;
+        submitButton.disabled = false;
+      });
+    });
+  });
+</script>
+
+</body>
+</html>
